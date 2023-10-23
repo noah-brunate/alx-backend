@@ -1,8 +1,9 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """
 script with a function index_range that takes two
 integer arguments page and page_size
 """
+
 
 from typing import Tuple
 
@@ -13,4 +14,4 @@ def index_range(page: int, page_size: int) -> Tuple[int, int]:
     of the requested page content
     """
 
-    return ((page - 1) * page_size, page * page_size)
+    return ((page-1) * page_size, page * page_size)
