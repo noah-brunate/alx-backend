@@ -39,31 +39,27 @@ class Server:
             }
         return self.__indexed_dataset
 
-    def get_hyper_index(self, index: int = None,
-                        page_size: int = 10) -> Dict:
-        """ return all data"""
-
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
+        """Function maintain page indexes after deletion of a page
+        """
         if index is None:
             index = 0
 
-        # validate the index
+        dataset = self.indexed_dataset()
+        assert 0 <= index < len(dataset)
         assert isinstance(index, int)
-        assert 0 <= index < len(self.indexed_dataset())
         assert isinstance(page_size, int) and page_size > 0
 
-        data = []  # collect all indexed data
+        data = []
         next_index = index + page_size
-
         for value in range(index, next_index):
-            if self.indexed_dataset().get(value):
-                data.append(self.indexed_dataset()[value])
+            if value in dataset.keys():
+                data.append(dataset[value])
             else:
                 value += 1
                 next_index += 1
 
-        return {
-            'index': index,
-            'data': data,
-            'page_size': page_size,
-            'next_index': next_index
-        }
+        return {'index': index,
+                'data': data,
+                'page_size': page_size,
+                'next_index': next_index}
