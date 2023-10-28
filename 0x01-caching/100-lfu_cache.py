@@ -23,14 +23,8 @@ class LFUCache(BaseCaching):
         if key is None or item is None:
             pass
         else:
-            self.cache_data[key] = item
-
-            if key in self.cache_items.keys():
-                self.cache_items[key] += 1
-            else:
-                self.cache_items[key] = 0
-
-            if len(self.cache_data.keys()) > BaseCaching.MAX_ITEMS:
+            if len(self.cache_data.keys()) >= BaseCaching.MAX_ITEMS \
+                    and key not in self.cache_data.keys():
                 sorted_list = sorted(self.cache_items.items(),
                                      key=lambda x: x[1])
                 k, v = sorted_list[0]
@@ -38,11 +32,19 @@ class LFUCache(BaseCaching):
                 del self.cache_data[k]
                 del self.cache_items[k]
 
+            self.cache_data[key] = item
+
+            if key in self.cache_items.keys():
+                self.cache_items[key] += 1
+            else:
+                self.cache_items[key] = 0
+
     def get(self, key):
         """ Get an item by key
         """
 
         if key in self.cache_data.keys():
+            self.cache_items[key] += 1
             return self.cache_data[key]
 
         return None
